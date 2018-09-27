@@ -9,5 +9,11 @@ module V1
       json_response(@users)
     end
 
+    def profile
+      authorize! :read, @current_user
+
+      json_response(UserProfileSerializer.new(@current_user))
+    end
+
   end
 end
