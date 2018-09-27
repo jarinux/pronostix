@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 source 'https://rubygems.org'
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+git_source(:github) {|repo| "https://github.com/#{repo}.git"}
 
 ruby '2.5.1'
 
@@ -23,6 +23,9 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'active_model_serializers'
 
 gem 'jwt'
+
+gem 'cancancan', '~> 2.0'
+gem 'rolify'
 
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
@@ -53,7 +56,6 @@ end
 group :test do
   gem 'database_cleaner'
   gem 'factory_bot_rails', '~> 4.0'
-  gem 'faker'
   gem 'shoulda-matchers', '~> 3.1'
 end
 

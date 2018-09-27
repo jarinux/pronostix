@@ -53,6 +53,7 @@ GEM
       msgpack (~> 1.0)
     builder (3.2.3)
     byebug (10.0.2)
+    cancancan (2.3.0)
     case_transform (0.2)
       activesupport
     concurrent-ruby (1.0.5)
@@ -127,6 +128,7 @@ GEM
     rb-fsevent (0.10.3)
     rb-inotify (0.9.10)
       ffi (>= 0.5.0, < 2)
+    rolify (5.2.0)
     rspec-core (3.8.0)
       rspec-support (~> 3.8.0)
     rspec-expectations (3.8.1)
@@ -175,6 +177,7 @@ DEPENDENCIES
   bcrypt (~> 3.1.7)
   bootsnap (>= 1.1.0)
   byebug
+  cancancan (~> 2.0)
   database_cleaner
   factory_bot_rails (~> 4.0)
   faker
@@ -183,6 +186,7 @@ DEPENDENCIES
   pg
   puma (~> 3.11)
   rails (~> 5.2.1)
+  rolify
   rspec-rails (~> 3.5)
   shoulda-matchers (~> 3.1)
   spring
