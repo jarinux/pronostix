@@ -8,7 +8,7 @@ belongs_to :resource,
 
 
 validates :resource_type,
-          :inclusion => { :in => Rolify.resource_types },
+          :inclusion => { :in => ['Group'] },
           :allow_nil => true
 
 scopify

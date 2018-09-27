@@ -15,5 +15,14 @@ module V1
       json_response(UserProfileSerializer.new(@current_user))
     end
 
+    def by_group
+      @group = Group.where(uuid: params[:group_id]).first
+      authorize! :read, @group
+
+      @users = Role.where(name: :player, group: @group).users
+
+      json_response(@users)
+    end
+
   end
 end
