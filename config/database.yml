@@ -1,0 +1,19 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  host: 127.0.0.1
+  username: postgres
+  password: postgres
+
+development:
+  <<: *default
+  database: pronostix_dev
+
+test:
+  <<: *default
+  database: pronostix_test
+
+production:
+  <<: *default
+  database: pronostix
