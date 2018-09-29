@@ -1,5 +1,9 @@
 class UserSerializer < ActiveModel::Serializer
 
-  attributes :uuid, :name, :email, :created_at, :city, :job, :preferred_sport, :preferred_team
+  attributes :id, :name, :email, :created_at, :city, :job, :preferred_sport, :preferred_team
+
+  def id
+    object.uuid
+  end
 
 end

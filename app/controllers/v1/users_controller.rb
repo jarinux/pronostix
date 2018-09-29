@@ -12,7 +12,7 @@ module V1
     def profile
       authorize! :read, @current_user
 
-      json_response(UserProfileSerializer.new(@current_user))
+      json_response(UserProfileSerializer.new(@current_user, root: false))
     end
 
     def by_group

@@ -27,6 +27,11 @@ gem 'jwt'
 gem 'cancancan', '~> 2.0'
 gem 'rolify'
 
+gem 'countries'
+
+gem 'httparty'
+gem 'friendly_id'
+
 # Use ActiveStorage variant
 # gem 'mini_magick', '~> 4.8'
 

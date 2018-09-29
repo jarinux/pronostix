@@ -1,5 +1,9 @@
 class GroupSerializer < ActiveModel::Serializer
 
-  attributes :uuid, :name, :description
+  attributes :id, :name, :description
+
+  def id
+    object.uuid
+  end
 
 end

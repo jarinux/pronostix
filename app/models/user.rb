@@ -1,6 +1,9 @@
 class User < ApplicationRecord
   include Identifiable
 
+  include FriendlyId
+  friendly_id :name, :use => [:slugged]
+
   rolify
 
   after_create :assign_default_role
