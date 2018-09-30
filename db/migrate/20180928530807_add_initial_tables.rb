@@ -12,6 +12,7 @@ class AddInitialTables < ActiveRecord::Migration[5.2]
       t.string :uuid, unique: true, index: true
       t.string :name
       t.string :slug, unique: true, index: true
+      t.string :sport, index: true
       t.date :founded
       t.string :country_code, index: true
       t.string :coach_name

@@ -35,6 +35,6 @@ module BackendApi
     config.api_only = true
 
     config.autoload_paths += %W(#{config.root}/app/connectors)
-    config.autoload_paths += %W(#{config.root}/app/strategies)
+    config.autoload_paths += %W(#{config.root}/app/services)
   end
 end

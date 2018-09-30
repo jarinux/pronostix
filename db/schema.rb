@@ -33,6 +33,23 @@ ActiveRecord::Schema.define(version: 2018_09_29_141922) do
     t.index ["uuid"], name: "index_competitions_on_uuid"
   end
 
+  create_table "games", force: :cascade do |t|
+    t.bigint "league_id"
+    t.integer "local_team_id"
+    t.integer "away_team_id"
+    t.integer "local_score"
+    t.integer "away_score"
+    t.integer "status", default: 0
+    t.datetime "event_date"
+    t.integer "round"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["away_team_id"], name: "index_games_on_away_team_id"
+    t.index ["league_id"], name: "index_games_on_league_id"
+    t.index ["local_team_id"], name: "index_games_on_local_team_id"
+    t.index ["status"], name: "index_games_on_status"
+  end
+
   create_table "gateways", force: :cascade do |t|
     t.string "gateway_id"
     t.bigint "provider_id"
@@ -111,25 +128,11 @@ ActiveRecord::Schema.define(version: 2018_09_29_141922) do
     t.index ["resource_type", "resource_id"], name: "index_roles_on_resource_type_and_resource_id"
   end
 
-  create_table "scores", force: :cascade do |t|
-    t.integer "local_team_id"
-    t.integer "away_team_id"
-    t.integer "local_score"
-    t.integer "away_score"
-    t.integer "status", default: 0
-    t.datetime "event_date"
-    t.integer "round"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["away_team_id"], name: "index_scores_on_away_team_id"
-    t.index ["local_team_id"], name: "index_scores_on_local_team_id"
-    t.index ["status"], name: "index_scores_on_status"
-  end
-
   create_table "teams", force: :cascade do |t|
     t.string "uuid"
     t.string "name"
     t.string "slug"
+    t.string "sport"
     t.date "founded"
     t.string "country_code"
     t.string "coach_name"
@@ -137,6 +140,7 @@ ActiveRecord::Schema.define(version: 2018_09_29_141922) do
     t.datetime "updated_at", null: false
     t.index ["country_code"], name: "index_teams_on_country_code"
     t.index ["slug"], name: "index_teams_on_slug"
+    t.index ["sport"], name: "index_teams_on_sport"
     t.index ["uuid"], name: "index_teams_on_uuid"
   end
 
