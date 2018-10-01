@@ -10,31 +10,76 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_29_141922) do
+ActiveRecord::Schema.define(version: 2018_10_01_021924) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "competition_periods", force: :cascade do |t|
-    t.bigint "competition_id"
-    t.bigint "period_id"
-    t.index ["competition_id"], name: "index_competition_periods_on_competition_id"
-    t.index ["period_id"], name: "index_competition_periods_on_period_id"
+  create_table "bet_types", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "competitions", force: :cascade do |t|
+  create_table "bets", force: :cascade do |t|
+    t.float "score"
+    t.integer "status"
+    t.bigint "bet_type_id"
+    t.bigint "challenge_event_id"
+    t.string "bet_object_type"
+    t.bigint "bet_object_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["bet_object_type", "bet_object_id"], name: "index_bets_on_bet_object_type_and_bet_object_id"
+    t.index ["bet_type_id"], name: "index_bets_on_bet_type_id"
+    t.index ["challenge_event_id"], name: "index_bets_on_challenge_event_id"
+    t.index ["status"], name: "index_bets_on_status"
+  end
+
+  create_table "challenge_events", force: :cascade do |t|
+    t.string "uuid"
+    t.string "name"
+    t.integer "status"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.bigint "challenge_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["challenge_id"], name: "index_challenge_events_on_challenge_id"
+    t.index ["start_date"], name: "index_challenge_events_on_start_date"
+    t.index ["status"], name: "index_challenge_events_on_status"
+    t.index ["uuid"], name: "index_challenge_events_on_uuid"
+  end
+
+  create_table "challenge_periods", force: :cascade do |t|
+    t.bigint "competition_id"
+    t.bigint "period_id"
+    t.index ["competition_id"], name: "index_challenge_periods_on_competition_id"
+    t.index ["period_id"], name: "index_challenge_periods_on_period_id"
+  end
+
+  create_table "challenges", force: :cascade do |t|
     t.string "uuid"
     t.string "name"
     t.string "slug"
     t.text "description"
+    t.integer "visibility", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["slug"], name: "index_competitions_on_slug"
-    t.index ["uuid"], name: "index_competitions_on_uuid"
+    t.index ["slug"], name: "index_challenges_on_slug"
+    t.index ["uuid"], name: "index_challenges_on_uuid"
+    t.index ["visibility"], name: "index_challenges_on_visibility"
+  end
+
+  create_table "challenges_groups", force: :cascade do |t|
+    t.bigint "group_id"
+    t.bigint "challenge_id"
+    t.index ["challenge_id"], name: "index_challenges_groups_on_challenge_id"
+    t.index ["group_id"], name: "index_challenges_groups_on_group_id"
   end
 
   create_table "games", force: :cascade do |t|
-    t.bigint "league_id"
+    t.bigint "league_edition_id"
     t.integer "local_team_id"
     t.integer "away_team_id"
     t.integer "local_score"
@@ -45,8 +90,9 @@ ActiveRecord::Schema.define(version: 2018_09_29_141922) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["away_team_id"], name: "index_games_on_away_team_id"
-    t.index ["league_id"], name: "index_games_on_league_id"
+    t.index ["league_edition_id"], name: "index_games_on_league_edition_id"
     t.index ["local_team_id"], name: "index_games_on_local_team_id"
+    t.index ["round"], name: "index_games_on_round"
     t.index ["status"], name: "index_games_on_status"
   end
 
@@ -68,18 +114,28 @@ ActiveRecord::Schema.define(version: 2018_09_29_141922) do
     t.string "name"
     t.string "slug"
     t.text "description"
+    t.integer "visibility", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["slug"], name: "index_groups_on_slug"
     t.index ["uuid"], name: "index_groups_on_uuid"
+    t.index ["visibility"], name: "index_groups_on_visibility"
+  end
+
+  create_table "league_editions", force: :cascade do |t|
+    t.string "uuid"
+    t.string "name"
+    t.string "slug"
+    t.bigint "league_id"
+    t.index ["league_id"], name: "index_league_editions_on_league_id"
+    t.index ["slug"], name: "index_league_editions_on_slug"
+    t.index ["uuid"], name: "index_league_editions_on_uuid"
   end
 
   create_table "league_participations", force: :cascade do |t|
-    t.bigint "league_id"
+    t.bigint "league_edition_id"
     t.bigint "team_id"
-    t.bigint "period_id"
-    t.index ["league_id"], name: "index_league_participations_on_league_id"
-    t.index ["period_id"], name: "index_league_participations_on_period_id"
+    t.index ["league_edition_id"], name: "index_league_participations_on_league_edition_id"
     t.index ["team_id"], name: "index_league_participations_on_team_id"
   end
 
@@ -97,16 +153,18 @@ ActiveRecord::Schema.define(version: 2018_09_29_141922) do
     t.index ["uuid"], name: "index_leagues_on_uuid"
   end
 
-  create_table "periods", force: :cascade do |t|
-    t.string "uuid"
-    t.string "name"
-    t.string "slug"
-    t.datetime "start_date"
-    t.datetime "end_date"
+  create_table "profiles", force: :cascade do |t|
+    t.bigint "user_id"
+    t.text "biography"
+    t.string "city"
+    t.string "job"
+    t.string "preferred_sport_id"
+    t.integer "preferred_team_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["slug"], name: "index_periods_on_slug"
-    t.index ["uuid"], name: "index_periods_on_uuid"
+    t.index ["preferred_sport_id"], name: "index_profiles_on_preferred_sport_id"
+    t.index ["preferred_team_id"], name: "index_profiles_on_preferred_team_id"
+    t.index ["user_id"], name: "index_profiles_on_user_id"
   end
 
   create_table "providers", force: :cascade do |t|
@@ -150,11 +208,6 @@ ActiveRecord::Schema.define(version: 2018_09_29_141922) do
     t.string "slug"
     t.string "email"
     t.string "password_digest"
-    t.text "biography"
-    t.string "city"
-    t.string "job"
-    t.string "preferred_sport"
-    t.string "preferred_team"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["slug"], name: "index_users_on_slug"

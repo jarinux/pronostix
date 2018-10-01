@@ -5,6 +5,7 @@ class CreateGroups < ActiveRecord::Migration[5.2]
       t.string :name
       t.string :slug, unique: true, index: true
       t.text :description
+      t.integer :visibility, default: 0, index: true
       t.timestamps
     end
   end

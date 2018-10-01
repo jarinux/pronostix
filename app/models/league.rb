@@ -8,5 +8,5 @@ class League < ApplicationRecord
 
   has_many :teams
   has_many :gateways, :as => :syncable, :dependent => :destroy
-  has_many :league_participations
+  has_many :league_editions
 end

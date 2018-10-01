@@ -17,10 +17,10 @@ class SoccerService < AbstractService
     gateway = _get_gateways(league).first
     standings = @connector.get_standings(gateway.gateway_id)
     standings.each do |standing|
-      period = Period.where(name: standing['season']).first_or_create
+      league_edition = LeagueEdition.where(name: standing['season']).first_or_create
       team = Team.where(name: standing['team_name'], sport: 'soccer').first_or_create
       Gateway.where(syncable: team, gateway_id: standing['team_id'], provider: @provider).first_or_create
-      LeagueParticipation.where(team_id: team.id, league_id: league.id, period_id: period.id).first_or_create
+      LeagueParticipation.where(team: team, league_edition: league_edition).first_or_create
     end
   end
 
@@ -29,13 +29,13 @@ class SoccerService < AbstractService
     date_format = '%Y-%m-%d'
     days = (Date.strptime(from_date,date_format)..Date.strptime(to_date,date_format)).to_a
     days.each do |day|
-      DebugLogger.info day
       data = @connector.get_matches({ comp_id: league_gateway.gateway_id, match_date: day})
       if data.kind_of?(Array)
         data.each do |game_data|
+          league_edition = league.league_editions.where(name: game_data['season']).first_or_create
           local_team = Gateway.where(syncable_type: 'Team', provider: @provider, gateway_id: game_data['localteam_id']).first.try(:syncable)
           away_team = Gateway.where(syncable_type: 'Team', provider: @provider, gateway_id: game_data['visitorteam_id']).first.try(:syncable)
-          game = Game.where(league: league, local_team: local_team, away_team: away_team, round: game_data['week']).first_or_create
+          game = Game.where(league_edition: league, local_team: local_team, away_team: away_team, round: game_data['week']).first_or_create
           game.gateways.where(provider: @provider, gateway_id: game_data['id']).first_or_create
           payload = { event_date: Date.strptime(game_data['formatted_date'], '%d.%m.%Y') }
           game.update(payload)

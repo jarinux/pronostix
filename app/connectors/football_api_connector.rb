@@ -9,7 +9,6 @@ class FootballApiConnector < AbstractProvider
   end
 
   def get_matches(params = {})
-    DebugLogger.info "#{_get_base_url}/matches?#{parsed_params(params)}"
     JSON.parse(HTTParty.get("#{_get_base_url}/matches?#{parsed_params(params)}").body)
   end
 

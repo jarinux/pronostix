@@ -8,6 +8,12 @@ class AddInitialTables < ActiveRecord::Migration[5.2]
       t.string :country_code, index: true
       t.timestamps
     end
+    create_table :league_editions do |t|
+      t.string :uuid, unique: true, index: true
+      t.string :name
+      t.string :slug, unique: true, index: true
+      t.belongs_to :league
+    end
     create_table :teams do |t|
       t.string :uuid, unique: true, index: true
       t.string :name
@@ -18,27 +24,32 @@ class AddInitialTables < ActiveRecord::Migration[5.2]
       t.string :coach_name
       t.timestamps
     end
-    create_table :periods do |t|
-      t.string :uuid, unique: true, index: true
-      t.string :name
-      t.string :slug, unique: true, index: true
-      t.datetime :start_date
-      t.datetime :end_date
-      t.timestamps
-    end
     create_table :league_participations do |t|
-      t.belongs_to :league
+      t.belongs_to :league_edition
       t.belongs_to :team
-      t.belongs_to :period
     end
-    create_table :competitions do |t|
+    create_table :challenges do |t|
       t.string :uuid, unique: true, index: true
       t.string :name
       t.string :slug, unique: true, index: true
       t.text :description
+      t.integer :visibility, default: 0, index: true
       t.timestamps
     end
-    create_table :competition_periods do |t|
+    create_table :challenges_groups do |t|
+      t.belongs_to :group
+      t.belongs_to :challenge
+    end
+    create_table :challenge_events do |t|
+      t.string :uuid, unique: true, index: true
+      t.string :name
+      t.integer :status, index: true
+      t.datetime :start_date, index: true
+      t.datetime :end_date
+      t.belongs_to :challenge
+      t.timestamps
+    end
+    create_table :challenge_periods do |t|
       t.belongs_to :competition, index: true
       t.belongs_to :period, index: true
     end

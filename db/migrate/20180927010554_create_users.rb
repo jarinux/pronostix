@@ -6,12 +6,16 @@ class CreateUsers < ActiveRecord::Migration[5.2]
       t.string :slug, unique: true, index: true
       t.string :email
       t.string :password_digest
-      t.text :biography
-      t.string :city
-      t.string :job
-      t.string :preferred_sport
-      t.string :preferred_team
       t.timestamps
     end
+  end
+  create_table :profiles do |t|
+    t.belongs_to :user
+    t.text :biography
+    t.string :city
+    t.string :job
+    t.string :preferred_sport_id, index: true
+    t.integer :preferred_team_id, index:true
+    t.timestamps
   end
 end

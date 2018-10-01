@@ -14,7 +14,7 @@ namespace :strategies do
     namespace :teams do
       task :sync => :environment do
         @soccer_service = SoccerService.new
-        @teams = Team.where(league: League.where(sport: 'soccer'))
+        @teams = Team.where(sport: 'soccer')
         @teams.each do |team|
           @soccer_service.update_team(team)
         end
